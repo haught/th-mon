@@ -2,7 +2,7 @@
 Description=Run th-mon every five minutes
 
 [Timer]
-OnCalendar=*:0/15
+OnCalendar=*:0/5
 Persistent=true
 
 [Install]
