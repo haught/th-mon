@@ -1,0 +1,6 @@
+.DS_Store
+public/data/*
+!public/data/.gitkeep
+rrd/*
+!rrd/.gitkeep
+config/config.yaml

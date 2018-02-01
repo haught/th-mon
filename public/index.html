@@ -1,0 +1,153 @@
+<html>
+<head>
+
+<script src="js/jquery-2.2.3.min.js"></script>
+<script src="js/highcharts.js"></script>
+<script>
+
+function makeChart(slug, file, title, unit) {
+  $.ajax({
+    type: "GET",
+    url: file,
+    dataType: "xml",
+    success: function(xml) {
+
+        Highcharts.setOptions({global:{useUTC:false}});
+        options={chart:
+          {renderTo:slug,type:"spline",zoomType:"xy"},
+          title:{text:""},
+          xAxis:{type:"datetime",dateTimeLabelFormats:{hour:"%H:%M"}},
+          yAxis:{title:{text:"Temperature (" + unit + ")"}},
+          tooltip:{formatter:function(){return"<b>"+this.series.name+"</b><br/>"+Highcharts.dateFormat("%H:%M",this.x)+": "+this.y.toFixed(1)+" " + unit}},
+          plotOptions:{series:{marker:{radius:2}}},
+          lineWidth:1,
+          series:[]}
+
+        var series = []
+
+        //define series
+        $(xml).find("entry").each(function() {
+            var seriesOptions = {
+                name: $(this).text(),
+                data: []
+            };
+            options.series.push(seriesOptions);
+        });
+
+        //populate with data
+        $(xml).find("row").each(function() {
+            var t = parseInt($(this).find("t").text()) * 1000
+
+            $(this).find("v").each(function(index) {
+                var v = parseFloat($(this).text())
+                v = v || null
+                if (v != null) {
+                    options.series[index].data.push([t, v])
+                };
+            });
+        });
+
+        options.title.text = title
+        $.each(series, function(index) {
+            options.series.push(series[index]);
+        });
+
+        chart = new Highcharts.Chart(options);
+    }
+  });
+}
+
+function changeChart(want) {
+  switch (want) {
+    case 'temp1y':
+      makeChart('temperature', 'data/temperature1y.xml', 'Temperatures of the last 1 years', '\xB0F');
+      break;
+    case 'temp3m':
+      makeChart('temperature', 'data/temperature3m.xml', 'Temperatures of the last 3 months', '\xB0F');
+      break;
+    case 'temp1m':
+      makeChart('temperature', 'data/temperature1m.xml', 'Temperatures of the last 1 months', '\xB0F');
+      break;
+    case 'temp1w':
+      makeChart('temperature', 'data/temperature1w.xml', 'Temperatures of the last 1 week', '\xB0F');
+      break;
+    case 'temp48h':
+      makeChart('temperature', 'data/temperature48h.xml', 'Temperatures of the last 48 hours', '\xB0F');
+      break;
+    case 'temp24h':
+      makeChart('temperature', 'data/temperature24h.xml', 'Temperatures of the last 24 hours', '\xB0F');
+      break;
+    case 'humid1y':
+      makeChart('humidity', 'data/humidity1y.xml', 'Humidity of the last 1 year', '%');
+      break;
+    case 'humid3m':
+      makeChart('humidity', 'data/humidity3m.xml', 'Humidity of the last 3 months', '%');
+      break;
+    case 'humid1m':
+      makeChart('humidity', 'data/humidity1m.xml', 'Humidity of the last 1 month', '%');
+      break;
+    case 'humid1w':
+      makeChart('humidity', 'data/humidity1w.xml', 'Humidity of the last 1 week', '%');
+      break;
+    case 'humid48h':
+      makeChart('humidity', 'data/humidity48h.xml', 'Humidity of the last 48 hours', '%');
+      break;
+    case 'humid24h':
+      makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24 hours', '%');
+      break;
+  }
+}
+
+makeChart('temperature', 'data/temperature24h.xml', 'Temperatures of the last 24h', '\xB0F');
+makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24h', '%');
+
+
+</script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+  
+<h1 style="text-align: center;"><script>document.write(window.location.hostname)</script> Environment Log</h1>
+
+<div class="container">
+  
+<form class="form-inline">
+  <div class="form-group">
+     <label class="control-label">Temperature</label>
+
+  <select onChange="changeChart(this.value)" class="form-control">
+    <option value="temp24h">24 Hours</option>
+    <option value="temp48h">48 Hours</option>
+    <option value="temp1w">1 Week</option>
+    <option value="temp1m">1 Month</option>
+    <option value="temp3m">3 Months</option>
+    <option value="temp1y">1 Year</option>
+  </select>
+
+  </div>
+</form>
+
+<div id="temperature" style="width:100%; height:40%"></div>
+
+<form class="form-inline">
+  <div class="form-group">
+     <label class="control-label">Humidity</label>
+
+  <select onChange="changeChart(this.value)" class="form-control">
+    <option value="humid24h">24 Hours</option>
+    <option value="humid48h">48 Hours</option>
+    <option value="humid1w">1 Week</option>
+    <option value="humid1m">1 Month</option>
+    <option value="humid3m">3 Months</option>
+    <option value="humid1y">1 Year</option>
+  </select>
+
+  </div>
+</form>
+<div id="humidity" style="width:100%; height:40%;"></div>
+
+</div>
+
+</body>
+</html>
