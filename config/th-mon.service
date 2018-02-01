@@ -1,0 +1,8 @@
+[Unit]
+Description=Run th-mon sensor grabber
+
+[Service]
+ExecStart=/var/www/th-mon/bin/sensor.py
+
+[Install]
+WantedBy=multi-user.target
