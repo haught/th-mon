@@ -1,11 +1,14 @@
 <html>
 <head>
 
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+
 <script src="js/jquery-2.2.3.min.js"></script>
 <script src="js/highcharts.js"></script>
 <script>
 
-function makeChart(slug, file, title, unit) {
+function makeChart(slug, file, title, unit, axisname) {
   $.ajax({
     type: "GET",
     url: file,
@@ -17,7 +20,7 @@ function makeChart(slug, file, title, unit) {
           {renderTo:slug,type:"spline",zoomType:"xy"},
           title:{text:""},
           xAxis:{type:"datetime",dateTimeLabelFormats:{hour:"%H:%M"}},
-          yAxis:{title:{text:"Temperature (" + unit + ")"}},
+          yAxis:{title:{text:axisname + " (" + unit + ")"}},
           tooltip:{formatter:function(){return"<b>"+this.series.name+"</b><br/>"+Highcharts.dateFormat("%H:%M",this.x)+": "+this.y.toFixed(1)+" " + unit}},
           plotOptions:{series:{marker:{radius:2}}},
           lineWidth:1,
@@ -60,46 +63,46 @@ function makeChart(slug, file, title, unit) {
 function changeChart(want) {
   switch (want) {
     case 'temp1y':
-      makeChart('temperature', 'data/temperature1y.xml', 'Temperatures of the last 1 years', '\xB0F');
+      makeChart('temperature', 'data/temperature1y.xml', 'Temperatures of the last 1 years', '\xB0F', 'Temperature');
       break;
     case 'temp3m':
-      makeChart('temperature', 'data/temperature3m.xml', 'Temperatures of the last 3 months', '\xB0F');
+      makeChart('temperature', 'data/temperature3m.xml', 'Temperatures of the last 3 months', '\xB0F', 'Temperature');
       break;
     case 'temp1m':
-      makeChart('temperature', 'data/temperature1m.xml', 'Temperatures of the last 1 months', '\xB0F');
+      makeChart('temperature', 'data/temperature1m.xml', 'Temperatures of the last 1 months', '\xB0F', 'Temperature');
       break;
     case 'temp1w':
-      makeChart('temperature', 'data/temperature1w.xml', 'Temperatures of the last 1 week', '\xB0F');
+      makeChart('temperature', 'data/temperature1w.xml', 'Temperatures of the last 1 week', '\xB0F', 'Temperature');
       break;
     case 'temp48h':
-      makeChart('temperature', 'data/temperature48h.xml', 'Temperatures of the last 48 hours', '\xB0F');
+      makeChart('temperature', 'data/temperature48h.xml', 'Temperatures of the last 48 hours', '\xB0F', 'Temperature');
       break;
     case 'temp24h':
-      makeChart('temperature', 'data/temperature24h.xml', 'Temperatures of the last 24 hours', '\xB0F');
+      makeChart('temperature', 'data/temperature24h.xml', 'Temperatures of the last 24 hours', '\xB0F', 'Temperature');
       break;
     case 'humid1y':
-      makeChart('humidity', 'data/humidity1y.xml', 'Humidity of the last 1 year', '%');
+      makeChart('humidity', 'data/humidity1y.xml', 'Humidity of the last 1 year', '%', 'Humidity');
       break;
     case 'humid3m':
-      makeChart('humidity', 'data/humidity3m.xml', 'Humidity of the last 3 months', '%');
+      makeChart('humidity', 'data/humidity3m.xml', 'Humidity of the last 3 months', '%', 'Humidity');
       break;
     case 'humid1m':
-      makeChart('humidity', 'data/humidity1m.xml', 'Humidity of the last 1 month', '%');
+      makeChart('humidity', 'data/humidity1m.xml', 'Humidity of the last 1 month', '%', 'Humidity');
       break;
     case 'humid1w':
-      makeChart('humidity', 'data/humidity1w.xml', 'Humidity of the last 1 week', '%');
+      makeChart('humidity', 'data/humidity1w.xml', 'Humidity of the last 1 week', '%', 'Humidity');
       break;
     case 'humid48h':
-      makeChart('humidity', 'data/humidity48h.xml', 'Humidity of the last 48 hours', '%');
+      makeChart('humidity', 'data/humidity48h.xml', 'Humidity of the last 48 hours', '%', 'Humidity');
       break;
     case 'humid24h':
-      makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24 hours', '%');
+      makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24 hours', '%', 'Humidity');
       break;
   }
 }
 
-makeChart('temperature', 'data/temperature24h.xml', 'Temperatures of the last 24h', '\xB0F');
-makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24h', '%');
+makeChart('temperature', 'data/temperature24h.xml', 'Temperatures of the last 24h', '\xB0F', 'Temperature');
+makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24h', '%', 'Humidity');
 
 
 </script>
@@ -107,11 +110,11 @@ makeChart('humidity', 'data/humidity24h.xml', 'Humidity of the last 24h', '%');
 <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-  
+
 <h1 style="text-align: center;"><script>document.write(window.location.hostname)</script> Environment Log</h1>
 
 <div class="container">
-  
+
 <form class="form-inline">
   <div class="form-group">
      <label class="control-label">Temperature</label>
